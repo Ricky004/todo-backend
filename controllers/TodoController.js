@@ -10,7 +10,6 @@ module.exports.saveTodo = async (req, res) => {
     const { text } = req.body
 
     TodoModel.create({text}).then((data) => {
-        console.log("Add Succesfully...")
         console.log(data)
         res.send(data)
     })
@@ -26,7 +25,7 @@ module.exports.updateTodo = async (req, res) => {
 }
 
 module.exports.deleteTodo = async (req, res) => {
-    const {_id } = req.body
+    const { _id } = req.body
 
     TodoModel.findByIdAndDelete(_id ).then(() => {
         res.send("delete Success")
