@@ -1,12 +1,23 @@
 const { Router } = require("express")
-const { getTodo, saveTodo, updateTodo, deleteTodo, taskdone } = require("../controllers/TodoController")
+const { 
+    getTodoList, createTodoList, updateTodoList,
+    deleteTodoList, getTask, createTask,
+    updateTask, deleteTask
+} = require("../controllers/TodoController")
 
 const router = Router()
 
-router.get('/', getTodo)
-router.post('/save', saveTodo)
-router.post('/update', updateTodo)
-router.post('/delete', deleteTodo)
-router.put('/isTaskDone', taskdone)
+// for the TodoList...
+router.get('/todo-lists', getTodoList)
+router.post('/todo-lists', createTodoList )
+router.put('/todo-lists/:id', updateTodoList)
+router.delete('/todo-lists/:id', deleteTodoList)
+
+// for the Tasks...
+router.get('/todo-lists/:id/tasks', getTask)
+router.post('/todo-lists/:id/tasks', createTask)
+router.put('/tasks/:id', updateTask)
+router.delete('/tasks/:id', deleteTask)
+ 
 
 module.exports = router

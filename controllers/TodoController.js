@@ -1,60 +1,91 @@
-const TodoModel = require('../models/TodoModel')
+const {TodoList, Task} = require("../models/TodoModel")
 
-module.exports.getTodo = async (req, res) => {
+
+// for TodoLists
+module.exports.getTodoList = async (req, res) => {
     try{
-        const todo = await TodoModel.find()
-        res.send(todo)
+        const todoLists = await TodoList.find()
+        res.send(todoLists)
     } catch(err) {
         console.log(err)
         res.status(500).send('Internal Server Error')
     }
 }
 
-module.exports.saveTodo = async (req, res) => {
-
-    const { text, isDone } = req.body
-
-    await TodoModel.create({text, isDone}).then((data) => {
-        console.log(data)
-        res.send(data)
-    }).catch((err) => {
+module.exports.createTodoList = async (req, res) => {
+    try {
+       const todoList = new TodoList(req.body)
+       await todoList.save()
+       res.send(todoList)
+    } catch (err) {
         console.log(err)
         res.status(500).send('Internal Server Error')
-    })
-    
+    }
 }
 
-module.exports.updateTodo = async (req, res) => {
-    const {_id, text} = req.body
+module.exports.updateTodoList = async (req, res) => {
 
-    await TodoModel.findByIdAndUpdate(_id, {text}).then(() => {
-        res.send("update Success")
-    }).catch((err) => {
+    try {
+        const todoList = await TodoList.findByIdAndUpdate( req.params.id, req.body)
+        res.send(todoList)
+    } catch (err) {
        console.log(err)
        res.status(500).send('Internal Server Error')
-    })
+    }
 }
 
-module.exports.deleteTodo = async (req, res) => {
-    const { _id } = req.body
-
-    await TodoModel.findByIdAndDelete(_id ).then(() => {
-        res.send("delete Success")
-    }).catch((err) => {
+module.exports.deleteTodoList = async (req, res) => {
+    try {
+        const todoList = await TodoList.findByIdAndDelete(req.params.id)
+        res.send(todoList)
+    } catch (err) {
         console.log(err)
         res.status(500).send('Internal Server Error')
-    })
+    }
 }
 
-module.exports.taskdone = async (req, res) => {
-    const {_id, isDone} = req.body
-
-    await TodoModel.findByIdAndUpdate(_id, {isDone}, {new: true}).then(() => {
-        res.send("is done")
-    }).catch((err) => {
+// for tasks
+module.exports.getTask = async (req, res) => {
+    try {
+        const task = await Task.find({ todoList: req.params.id })
+        res.send(task)
+    } catch (err) {
         console.log(err)
         res.status(500).send('Internal Server Error')
-    })
+    }
 }
 
+module.exports.createTask = async (req, res) => {
+    try {
+        const task = new Task({ 
+            todoList: req.params.id,
+            ...req.body,
+        })
+        await task.save()
+        res.send(task)
+    } catch (err) {
+        console.log(err)
+        res.status(500).send('Internal Server Error')
+    }
+}
+
+module.exports.updateTask = async (req, res) => {
+    try {
+        const task = await Task.findByIdAndUpdate( req.params.id, req.body )
+        res.send(task)
+    } catch (err) {
+        console.log(err)
+        res.status(500).send('Internal Server Error')
+    }
+}
+
+module.exports.deleteTask = async (req, res) => {
+    try {
+        const task = await Task.findByIdAndDelete( req.params.id )
+        res.send(task)
+    } catch (err) {
+        console.log(err)
+        res.status(500).send('Internal Server Error')
+    }
+}
 
