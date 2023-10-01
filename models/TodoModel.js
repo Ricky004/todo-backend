@@ -14,6 +14,8 @@ const TodoListSchema = new mongoose.Schema({
 const TaskSchema = new mongoose.Schema({
     text: {
         type: String,
+        maxLength: 30,
+        minLength: 1,
         require: true,
     },
     complete: {
